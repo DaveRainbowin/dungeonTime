@@ -49,7 +49,8 @@ function stopTimer() {
   timeStops++;
   let shopButton = document.createElement("button");
   shopButton.innerHTML = "Open shop";
-  body.insertBefore(shopButton, get("accelerateButton"));
+  document.body.insertBefore(shopButton, get("accelerateButton"));
+  shopButton.setAttribute("onclick", "openShop()");
 }
 function timer() {
   if (timerRunning) {
@@ -81,9 +82,17 @@ function openShop() {
 function get(id) {
   return document.getElementById(id);
 }
-function createElement(type, content, area) {
-  let tempType = document.createElement(type);
-  tempType.innerHTML = content;
+function createElement(type, content, area, attr, info, attr2, info2) {
+  var tempType = document.createElement(type);
+  if (content) {
+    tempType.innerHTML = content;
+  }
+  if (attr && info) {
+    tempType.setAttribute(attr, info);
+  }
+  if (attr2 && info2) {
+    tempType.setAttribute(attr2, info2);
+  }
   get(area).appendChild(tempType);
 }
 window.addEventListener("keydown", onKeyDown, false);
@@ -94,20 +103,22 @@ var keyW = false;
 var keyA = false;
 var keyS = false;
 var keyD = false;
+var zombies = {
+};
 setInterval(movePlayer, 100);
 function onKeyDown(event) {
   var keyCode = event.keyCode;
   switch (keyCode) {
-    case 68: //d
+    case 68:
       keyD = true;
       break;
-    case 83: //s
+    case 83:
       keyS = true;
       break;
-    case 65: //a
+    case 65:
       keyA = true;
       break;
-    case 87: //w
+    case 87:
       keyW = true;
       break;
   }
@@ -132,30 +143,44 @@ function onKeyUp(event) {
 function movePlayer() {
   let player = get("player").style;
   if (timerRunning) {
-    if (keyW) {
+    if (keyW && tickX >= 10) {
       tickX -= 10;
       player.top = `${tickX}px`;
       console.log("w pressed");
-    } else if (keyS) {
+    } else if (keyS && tickX <= 1290) {
       tickX += 10;
       player.top = `${tickX}px`;
       console.log("s pressed");
-    } else if (keyD) {
+    } else if (keyD && tickY >= 10) {
       tickY -= 10;
       player.right = `${tickY}px`;
       console.log("d pressed");
-    } else if (keyA) {
+    } else if (keyA && tickY <= 590) {
       tickY += 10;
       player.right = `${tickY}px`;
       console.log("a pressed");
     }
   }
 }
+function getRandom(max) {
+  return Math.floor(Math.random() * Math.floor(max));
+}
+var zombNum = 0;
 function spawnZombie() {
-  // spawn zombie
-  // # of zombies
-  // random x and y
-  // keep track of them
+  let zombProp = `_${zombNum}`;
+  let zombID = `zomb${zombNum}`;
+  let randomX = getRandom(500);
+  let randomY = getRandom(1300);
+  zombies[zombProp] = {};
+  zombies[zombProp].hp = 3;
+  zombies[zombProp].alive = true;
+  zombies[zombProp].x = randomX;
+  zombies[zombProp].y = randomY;
+  createElement("img", null, "map", "src", "sprites/zombie_right.png", "id", zombID);
+  get(zombID).style.position = "absolute";
+  get(zombID).style.top = `${randomX}px`;
+  get(zombID).style.right = `${randomY}px`;
+  zombNum++;
 }
 function moveZombie() {
   // move each zombie towards the player
