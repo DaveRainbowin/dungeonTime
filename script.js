@@ -88,8 +88,8 @@ function createElement(type, content, area) {
 }
 window.addEventListener("keydown", onKeyDown, false);
 window.addEventListener("keyup", onKeyUp, false);
-var tickX = 10;
-var tickY = 10;
+var tickX = 300;
+var tickY = 650;
 var keyW = false;
 var keyA = false;
 var keyS = false;
