@@ -37,4 +37,6 @@ body {
 }
 #player {
   position: absolute;
+  top: 300px;
+  right: 650px;
 }
