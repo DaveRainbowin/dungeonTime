@@ -25,7 +25,14 @@ function update() {
   }
 }
 function startTimer() {
-  if (!timerRunning) {
+  if (!timerRunning && !timerFinished) {
+    timing = setInterval(timer, speed);
+    timerRunning = true;
+    timerFinished = false;
+  } else if (!timerRunning && timerFinished){
+    secLeft = 300;
+    minLeft = 5;
+    timerTemp = `5:00`;
     timing = setInterval(timer, speed);
     timerRunning = true;
     timerFinished = false;
@@ -40,6 +47,9 @@ function stopTimer() {
   timerFinished = true;
   get("timer").innerHTML = timerTemp;
   timeStops++;
+  let shopButton = document.createElement("button");
+  shopButton.innerHTML = "Open shop";
+  body.insertBefore(shopButton, get("accelerateButton"));
 }
 function timer() {
   if (timerRunning) {
@@ -123,21 +133,30 @@ function movePlayer() {
   let player = get("player").style;
   if (timerRunning) {
     if (keyW) {
-      tickX -= 5;
+      tickX -= 10;
       player.top = `${tickX}px`;
       console.log("w pressed");
     } else if (keyS) {
-      tickX += 5;
+      tickX += 10;
       player.top = `${tickX}px`;
       console.log("s pressed");
     } else if (keyD) {
-      tickY -= 5;
+      tickY -= 10;
       player.right = `${tickY}px`;
       console.log("d pressed");
     } else if (keyA) {
-      tickY += 5;
+      tickY += 10;
       player.right = `${tickY}px`;
       console.log("a pressed");
     }
   }
+}
+function spawnZombie() {
+  // spawn zombie
+  // # of zombies
+  // random x and y
+  // keep track of them
+}
+function moveZombie() {
+  // move each zombie towards the player
 }
