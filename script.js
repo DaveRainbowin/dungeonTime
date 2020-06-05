@@ -9,12 +9,19 @@ var speed = 1000;
 var timing = setInterval(null, 1000);
 var timerRunning = false;
 var timerFinished = false;
+var timeStops = 0;
+var shopOpen = false;
 function update() {
   pctHP = currentHP/totalHP * 100;
   get("hp").style.width = pctHP + "%";
   get("hpText").innerHTML = `${currentHP}/${totalHP}HP`;
-  if (secLeft == 0) {
+  if (secLeft == 0 && !timerFinished) {
     stopTimer();
+  }
+  if (timeStops % 3 == 0 && timeStops != 0 && !shopOpen) {
+    openShop();
+    shopOpen = true;
+    return;
   }
 }
 function startTimer() {
@@ -32,6 +39,7 @@ function stopTimer() {
   timerTemp = `0:00`;
   timerFinished = true;
   get("timer").innerHTML = timerTemp;
+  timeStops++;
 }
 function timer() {
   if (timerRunning) {
@@ -56,6 +64,14 @@ function accelerate() {
     timing = setInterval(timer, speed);
   }
 }
+function openShop() {
+  createElement("p", "Welcome to the shop!", "shop");
+}
 function get(id) {
   return document.getElementById(id);
+}
+function createElement(type, content, area) {
+  let tempType = document.createElement(type);
+  tempType.innerHTML = content;
+  get(area).appendChild(tempType);
 }

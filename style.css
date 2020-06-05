@@ -1,3 +1,8 @@
+body {
+  background-image: url(sprites/ground.png);
+  color: cyan;
+  font-family: sans-serif;
+}
 #hp {
   background-color: red;
   width: 100%;
@@ -5,6 +10,20 @@
 }
 #hp-container {
   background-color: transparent;
+}
+#timer {
+  font-weight: 700;
+  font-size: larger;
+}
+#startButton {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+}
+#accelerateButton {
+  position: absolute;
+  right: 0;
+  bottom: 0;
 }
 .container {
   text-align: center;
