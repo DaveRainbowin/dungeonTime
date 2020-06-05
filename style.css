@@ -1,7 +1,11 @@
 body {
   background-image: url(sprites/ground.png);
-  color: cyan;
+  color: lightgray;
   font-family: sans-serif;
+}
+#map {
+  width: 100%;
+  height: 500px;
 }
 #hp {
   background-color: red;
@@ -27,4 +31,10 @@ body {
 }
 .container {
   text-align: center;
+}
+#shop > p {
+  color: white;
+}
+#player {
+  position: absolute;
 }

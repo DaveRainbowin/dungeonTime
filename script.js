@@ -66,6 +66,7 @@ function accelerate() {
 }
 function openShop() {
   createElement("p", "Welcome to the shop!", "shop");
+  createElement("p", "Health Potion <br /> 1$", "shop");
 }
 function get(id) {
   return document.getElementById(id);
@@ -74,4 +75,69 @@ function createElement(type, content, area) {
   let tempType = document.createElement(type);
   tempType.innerHTML = content;
   get(area).appendChild(tempType);
+}
+window.addEventListener("keydown", onKeyDown, false);
+window.addEventListener("keyup", onKeyUp, false);
+var tickX = 10;
+var tickY = 10;
+var keyW = false;
+var keyA = false;
+var keyS = false;
+var keyD = false;
+setInterval(movePlayer, 100);
+function onKeyDown(event) {
+  var keyCode = event.keyCode;
+  switch (keyCode) {
+    case 68: //d
+      keyD = true;
+      break;
+    case 83: //s
+      keyS = true;
+      break;
+    case 65: //a
+      keyA = true;
+      break;
+    case 87: //w
+      keyW = true;
+      break;
+  }
+}
+function onKeyUp(event) {
+  var keyCode = event.keyCode;
+  switch (keyCode) {
+    case 68: //d
+      keyD = false;
+      break;
+    case 83: //s
+      keyS = false;
+      break;
+    case 65: //a
+      keyA = false;
+      break;
+    case 87: //w
+      keyW = false;
+      break;
+  }
+}
+function movePlayer() {
+  let player = get("player").style;
+  if (timerRunning) {
+    if (keyW) {
+      tickX -= 5;
+      player.top = `${tickX}px`;
+      console.log("w pressed");
+    } else if (keyS) {
+      tickX += 5;
+      player.top = `${tickX}px`;
+      console.log("s pressed");
+    } else if (keyD) {
+      tickY -= 5;
+      player.right = `${tickY}px`;
+      console.log("d pressed");
+    } else if (keyA) {
+      tickY += 5;
+      player.right = `${tickY}px`;
+      console.log("a pressed");
+    }
+  }
 }
