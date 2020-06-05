@@ -5,9 +5,14 @@
     <script src="script.js"></script>
   </head>
   <body>
-    <div id="hp-container">
+    <div id="hp-container" class="container">
       <div id="hp"></div>
       <div id="hpText">50/50 HP</div>
     </div>
+    <div class="container">
+      <p id="timer">5:00</p>
+    </div>
+    <button onclick="startTimer()" id="startButton">Start</button>
+    <button onclick="accelerate()" id="accelerateButton">Speed up the timer</button>
   </body>
 </html>
