@@ -40,3 +40,8 @@ body {
   top: 300px;
   right: 650px;
 }
+#gameOver {
+  font-size: 100px;
+  color: rgb(204, 67, 67);
+  text-align: center;
+}

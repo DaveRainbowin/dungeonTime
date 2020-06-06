@@ -11,10 +11,18 @@ var timerRunning = false;
 var timerFinished = false;
 var timeStops = 0;
 var shopOpen = false;
+var alive = true;
+var spawning = false;
+var potions = 10;
 function update() {
   pctHP = currentHP/totalHP * 100;
   get("hp").style.width = pctHP + "%";
-  get("hpText").innerHTML = `${currentHP}/${totalHP}HP`;
+  get("hpText").innerHTML = `${currentHP}/${totalHP} HP`;
+  if (currentHP == 0 && alive) {
+    createElement("p", "Game Over!", "map", "id", "gameOver");
+    alive = false;
+    stopTimer();
+  }
   if (secLeft == 0 && !timerFinished) {
     stopTimer();
   }
@@ -23,12 +31,24 @@ function update() {
     shopOpen = true;
     return;
   }
+  if (timerRunning) {
+    if (zombAct >= 5) {
+      clearInterval(spawner);
+      spawning = false;
+    } else if (zombAct <= 0 && !spawning) {
+      spawner = setInterval(spawnZombie, 2000);
+      spawning = true;
+    }
+  }
+  get("potionsLeft").innerHTML = `${potions} potions left`;
 }
 function startTimer() {
   if (!timerRunning && !timerFinished) {
     timing = setInterval(timer, speed);
     timerRunning = true;
     timerFinished = false;
+    spawner = setInterval(spawnZombie, 2000);
+    spawning = true;
   } else if (!timerRunning && timerFinished){
     secLeft = 300;
     minLeft = 5;
@@ -121,21 +141,27 @@ function onKeyDown(event) {
     case 87:
       keyW = true;
       break;
+    case 69:
+      kill();
+      break;
+    case 81:
+      heal();
+      break;
   }
 }
 function onKeyUp(event) {
   var keyCode = event.keyCode;
   switch (keyCode) {
-    case 68: //d
+    case 68:
       keyD = false;
       break;
-    case 83: //s
+    case 83:
       keyS = false;
       break;
-    case 65: //a
+    case 65:
       keyA = false;
       break;
-    case 87: //w
+    case 87:
       keyW = false;
       break;
   }
@@ -147,15 +173,18 @@ function movePlayer() {
       tickX -= 10;
       player.top = `${tickX}px`;
       console.log("w pressed");
-    } else if (keyS && tickX <= 1290) {
+    }
+    if (keyS && tickX <= 590) {
       tickX += 10;
       player.top = `${tickX}px`;
       console.log("s pressed");
-    } else if (keyD && tickY >= 10) {
+    }
+    if (keyD && tickY >= 10) {
       tickY -= 10;
       player.right = `${tickY}px`;
       console.log("d pressed");
-    } else if (keyA && tickY <= 590) {
+    }
+    if (keyA && tickY <= 1290) {
       tickY += 10;
       player.right = `${tickY}px`;
       console.log("a pressed");
@@ -166,7 +195,11 @@ function getRandom(max) {
   return Math.floor(Math.random() * Math.floor(max));
 }
 var zombNum = 0;
+var zombAct = 0;
+var spawner = null;
+setInterval(moveZombie, 100);
 function spawnZombie() {
+  zombAct++;
   let zombProp = `_${zombNum}`;
   let zombID = `zomb${zombNum}`;
   let randomX = getRandom(500);
@@ -176,6 +209,8 @@ function spawnZombie() {
   zombies[zombProp].alive = true;
   zombies[zombProp].x = randomX;
   zombies[zombProp].y = randomY;
+  zombies[zombProp].id = zombID;
+  zombies[zombProp].playerRadius = false;
   createElement("img", null, "map", "src", "sprites/zombie_right.png", "id", zombID);
   get(zombID).style.position = "absolute";
   get(zombID).style.top = `${randomX}px`;
@@ -183,5 +218,63 @@ function spawnZombie() {
   zombNum++;
 }
 function moveZombie() {
-  // move each zombie towards the player
+  for (var zombie in zombies) {
+    if (zombies[zombie] != null) {
+      if (zombies[zombie].hp <= 0) {
+        let zombieElement = get(zombies[zombie].id);
+        zombieElement.parentNode.removeChild(zombieElement);
+        zombies[zombie] = null;
+        zombAct--;
+        console.log("Zombie killed and deleted");
+      }
+      if (zombies[zombie] != null && zombies[zombie].hp >= 0) {
+        if (zombies[zombie].x > tickX) {
+          zombies[zombie].x -= 5;
+        } else if (zombies[zombie].x < tickX) {
+          zombies[zombie].x += 5;
+        }
+        if (zombies[zombie].y > tickY) {
+          zombies[zombie].y -= 5;
+        } else if (zombies[zombie].y < tickY) {
+          zombies[zombie].y += 5;
+        }
+        if (zombies[zombie].y < tickY + 10 && zombies[zombie].y > tickY - 10 && zombies[zombie].x < tickX + 10 && zombies[zombie].x > tickX - 10) {
+          zombies[zombie].playerRadius = true;
+        } else {
+          zombies[zombie].playerRadius = false;
+        }
+        get(zombies[zombie].id).style.top = `${zombies[zombie].x}px`;
+        get(zombies[zombie].id).style.right = `${zombies[zombie].y}px`;
+      }
+    }
+  }
+}
+function kill() {
+  for (var zombie in zombies) {
+    if (zombies[zombie] != null) {
+      if (zombies[zombie].playerRadius) {
+        zombies[zombie].hp -= 1;
+      }
+    }
+  }
+}
+setInterval(attack, 1000);
+function attack() {
+  for (var zombie in zombies) {
+    if (zombies[zombie] != null) {
+      if (zombies[zombie].playerRadius && currentHP > 0) {
+        currentHP--;
+        if (currentHP <= 0) {
+          currentHP = 0;
+        }
+      }
+    }
+  }
+}
+function heal() {
+  if (potions > 0) {
+    potions--;
+    currentHP += 3;
+    update();
+  }
 }
