@@ -253,6 +253,12 @@ function moveZombie() {
         get(zombies[zombie].id).style.top = `${zombies[zombie].x}px`;
         get(zombies[zombie].id).style.right = `${zombies[zombie].y}px`;
       }
+    } else if (zombies[zombie] != null && !timerRunning) {
+      let zombieElement = get(zombies[zombie].id);
+      zombieElement.parentNode.removeChild(zombieElement);
+      zombies[zombie] = null;
+      zombAct--;
+      console.log("Zombie killed and deleted after round end");
     }
   }
 }
