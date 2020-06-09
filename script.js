@@ -29,7 +29,6 @@ function update() {
   if (timeStops % 3 == 0 && timeStops != 0 && !shopOpen) {
     openShop();
     shopOpen = true;
-    return;
   }
   if (timerRunning) {
     if (zombAct >= 5) {
@@ -67,10 +66,13 @@ function stopTimer() {
   timerFinished = true;
   get("timer").innerHTML = timerTemp;
   timeStops++;
-  let shopButton = document.createElement("button");
-  shopButton.innerHTML = "Open shop";
-  document.body.insertBefore(shopButton, get("accelerateButton"));
-  shopButton.setAttribute("onclick", "openShop()");
+  if (!shopButton) {
+    let shopButton = document.createElement("button");
+    shopButton.innerHTML = "Open shop";
+    document.body.insertBefore(shopButton, get("accelerateButton"));
+    shopButton.setAttribute("onclick", "openShop()");
+    shopButton = true;
+  }
 }
 function timer() {
   if (timerRunning) {
@@ -96,8 +98,10 @@ function accelerate() {
   }
 }
 function openShop() {
-  createElement("p", "Welcome to the shop!", "shop");
-  createElement("p", "Health Potion <br /> 1$", "shop");
+  if (!shopOpen) {
+    createElement("p", "Welcome to the shop!", "shop");
+    createElement("p", "Health Potion <br /> 1$", "shop");
+  }
 }
 function get(id) {
   return document.getElementById(id);
