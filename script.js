@@ -92,7 +92,8 @@ function timer() {
   }
 }
 function accelerate() {
-  if (speed > 500) {
+  if (speed > 100) {
+    clearInterval(timing);
     speed -= 100;
     timing = setInterval(timer, speed);
   }
@@ -203,23 +204,25 @@ var zombAct = 0;
 var spawner = null;
 setInterval(moveZombie, 100);
 function spawnZombie() {
-  zombAct++;
-  let zombProp = `_${zombNum}`;
-  let zombID = `zomb${zombNum}`;
-  let randomX = getRandom(500);
-  let randomY = getRandom(1300);
-  zombies[zombProp] = {};
-  zombies[zombProp].hp = 3;
-  zombies[zombProp].alive = true;
-  zombies[zombProp].x = randomX;
-  zombies[zombProp].y = randomY;
-  zombies[zombProp].id = zombID;
-  zombies[zombProp].playerRadius = false;
-  createElement("img", null, "map", "src", "sprites/zombie_right.png", "id", zombID);
-  get(zombID).style.position = "absolute";
-  get(zombID).style.top = `${randomX}px`;
-  get(zombID).style.right = `${randomY}px`;
-  zombNum++;
+  if (timerRunning) {
+    zombAct++;
+    let zombProp = `_${zombNum}`;
+    let zombID = `zomb${zombNum}`;
+    let randomX = getRandom(500);
+    let randomY = getRandom(1300);
+    zombies[zombProp] = {};
+    zombies[zombProp].hp = 3;
+    zombies[zombProp].alive = true;
+    zombies[zombProp].x = randomX;
+    zombies[zombProp].y = randomY;
+    zombies[zombProp].id = zombID;
+    zombies[zombProp].playerRadius = false;
+    createElement("img", null, "map", "src", "sprites/zombie_right.png", "id", zombID);
+    get(zombID).style.position = "absolute";
+    get(zombID).style.top = `${randomX}px`;
+    get(zombID).style.right = `${randomY}px`;
+    zombNum++;
+  }
 }
 function moveZombie() {
   for (var zombie in zombies) {
@@ -276,7 +279,7 @@ function attack() {
   }
 }
 function heal() {
-  if (potions > 0 && timerRunning) {
+  if (potions > 0 && timerRunning && totalHP - 3 >= currentHP) {
     potions--;
     currentHP += 3;
     update();
