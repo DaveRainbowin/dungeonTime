@@ -42,7 +42,7 @@ function update() {
   get("potionsLeft").innerHTML = `${potions} potions left`;
 }
 function startTimer() {
-  if (!timerRunning && !timerFinished) {
+  if (!timerRunning && !timerFinished && alive) {
     timing = setInterval(timer, speed);
     timerRunning = true;
     timerFinished = false;
@@ -285,7 +285,7 @@ function attack() {
   }
 }
 function heal() {
-  if (potions > 0 && timerRunning && totalHP - 3 >= currentHP) {
+  if (potions > 0 && timerRunning && totalHP - 3 >= currentHP && alive) {
     potions--;
     currentHP += 3;
     update();
