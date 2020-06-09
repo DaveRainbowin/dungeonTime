@@ -223,7 +223,7 @@ function spawnZombie() {
 }
 function moveZombie() {
   for (var zombie in zombies) {
-    if (zombies[zombie] != null) {
+    if (zombies[zombie] != null && timerRunning) {
       if (zombies[zombie].hp <= 0) {
         let zombieElement = get(zombies[zombie].id);
         zombieElement.parentNode.removeChild(zombieElement);
@@ -276,7 +276,7 @@ function attack() {
   }
 }
 function heal() {
-  if (potions > 0) {
+  if (potions > 0 && timerRunning) {
     potions--;
     currentHP += 3;
     update();
